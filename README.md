@@ -33,6 +33,7 @@ npm run dev
 | `npm run build` | production-сборка (`tsc -b && vite build`) |
 | `npm run preview` | просмотр production-сборки |
 | `npm run test` | unit-тесты (Vitest) |
+| `npm run test:e2e` | smoke e2e (Playwright) |
 | `npm run lint` | oxlint |
 | `npm run generate:api` | перегенерация типов из OpenAPI |
 
@@ -89,8 +90,9 @@ MSW store содержит 8 аукционов:
 ### Автоматически
 
 ```bash
-npm run test   # 26 тестов
-npm run build  # проходит
+npm run test      # 27+ unit
+npm run test:e2e  # smoke: список, фильтр, ставка, hide_bets_history
+npm run build
 ```
 
 Покрыта чистая логика:
@@ -117,7 +119,7 @@ npm run build  # проходит
 ## Ограничения
 
 - Нет реального backend/auth: MSW только в `import.meta.env.DEV`.
-- Нет e2e (Playwright/Cypress) — проверка ручная + unit-тесты.
+- Нет полного e2e-набора — есть smoke Playwright (`npm run test:e2e`), но не CI-матрица браузеров.
 - UI без сторонней component library: собственный лёгкий CSS.
 - Не все поля `AuctionListRequest` вынесены в UI-фильтры (в store фильтрация шире, чем форма).
 - Toast-очередь на Zustand без persistence.

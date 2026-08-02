@@ -13,6 +13,8 @@ export function AuctionListCard({ auction, onPrefetch }: AuctionListCardProps) {
   return (
     <article
       className={styles.card}
+      data-testid="auction-card"
+      data-auction-uuid={auction.uuid}
       onMouseEnter={prefetch}
       onFocus={prefetch}
     >
@@ -37,6 +39,9 @@ export function AuctionListCard({ auction, onPrefetch }: AuctionListCardProps) {
           >
             {auction.statusMobileLabel}
           </span>
+          {auction.isAvailable ? (
+            <span className={styles.badgeAccent}>Доступен</span>
+          ) : null}
         </div>
       </div>
 
@@ -65,6 +70,10 @@ export function AuctionListCard({ auction, onPrefetch }: AuctionListCardProps) {
             <span className={styles.subtle}> · {auction.pricePerKmLabel}</span>
           </dd>
         </div>
+        <div className={styles.ownBet}>
+          <dt>Моя ставка</dt>
+          <dd>{auction.ownBetLabel}</dd>
+        </div>
       </dl>
 
       <div className={styles.actions}>
@@ -76,17 +85,20 @@ export function AuctionListCard({ auction, onPrefetch }: AuctionListCardProps) {
         >
           Детали
         </Link>
-        <Link
-          to={auction.primaryAction.to}
-          params={{ auctionUuid: auction.uuid }}
-          className={styles.primary}
-          aria-disabled={auction.primaryAction.disabled || undefined}
-          onClick={(event) => {
-            if (auction.primaryAction.disabled) event.preventDefault()
-          }}
-        >
-          {auction.primaryAction.label}
-        </Link>
+        {auction.primaryAction.disabled ? (
+          <span className={styles.disabled} aria-disabled="true">
+            {auction.primaryAction.label}
+          </span>
+        ) : (
+          <Link
+            to={auction.primaryAction.to}
+            params={{ auctionUuid: auction.uuid }}
+            className={styles.primary}
+            data-testid="auction-primary-action"
+          >
+            {auction.primaryAction.label}
+          </Link>
+        )}
       </div>
     </article>
   )

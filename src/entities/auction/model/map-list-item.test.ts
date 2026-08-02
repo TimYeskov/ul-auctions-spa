@@ -53,6 +53,20 @@ describe('resolvePrimaryAction', () => {
     expect(action.kind).toBe('change_bet')
   })
 
+  it('returns disabled for stopped auction without own bet', () => {
+    const action = resolvePrimaryAction(
+      item({
+        trading: {
+          can_set_bet: false,
+          status: 'Stopped',
+          your: { bet: false },
+        },
+      }),
+    )
+    expect(action.kind).toBe('disabled')
+    expect(action.disabled).toBe(true)
+  })
+
   it('returns view bets when betting is closed', () => {
     const action = resolvePrimaryAction(
       item({ trading: { can_set_bet: false, your: { bet: true } } }),
@@ -77,6 +91,7 @@ describe('mapAuctionListItem', () => {
     expect(vm?.routeLabel).toBe('Пермь → Москва')
     expect(vm?.aucTypeLabel).toBe('На понижение')
     expect(vm?.currentPriceLabel).toContain('30')
+    expect(vm?.ownBetLabel).toBe('Моей ставки нет')
     expect(vm?.primaryAction.kind).toBe('place_bet')
   })
 })

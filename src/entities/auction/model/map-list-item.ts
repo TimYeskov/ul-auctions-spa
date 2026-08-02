@@ -37,6 +37,7 @@ export type AuctionListCardViewModel = {
   cargoMeta: string
   currentPriceLabel: string
   pricePerKmLabel: string
+  ownBetLabel: string
   hasOwnBet: boolean
   isAvailable: boolean
   canSetBet: boolean
@@ -72,6 +73,15 @@ export function resolvePrimaryAction(
       kind: 'view_detail',
       label: 'Смотреть',
       disabled: false,
+      to: '/auctions/$auctionUuid',
+    }
+  }
+
+  if (!canSetBet && !hasOwnBet && item.trading?.status === 'Stopped') {
+    return {
+      kind: 'disabled',
+      label: 'Ставка недоступна',
+      disabled: true,
       to: '/auctions/$auctionUuid',
     }
   }
@@ -117,6 +127,9 @@ export function mapAuctionListItem(
     cargoMeta: cargoMetaParts.join(' · ') || '—',
     currentPriceLabel: formatPrice(item.trading?.price?.current),
     pricePerKmLabel: formatPrice(item.main?.price_per_km, '₽/км'),
+    ownBetLabel: item.trading?.your?.bet
+      ? `Моя ставка: ${formatPrice(item.trading.your.last_bet)}`
+      : 'Моей ставки нет',
     hasOwnBet: Boolean(item.trading?.your?.bet),
     isAvailable: Boolean(item.trading?.is_available),
     canSetBet: Boolean(item.trading?.can_set_bet),
