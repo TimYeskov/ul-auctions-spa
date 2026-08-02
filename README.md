@@ -31,7 +31,7 @@ npm run dev
 
 ## Маршруты
 
-- `/` — список аукционов
+- `/` — список аукционов (фильтры в search params)
 - `/auctions/$auctionUuid` — деталка
 - `/auctions/$auctionUuid/bets` — ставки
 - `/auctions/$auctionUuid/bet` — форма ставки

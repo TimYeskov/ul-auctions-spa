@@ -1,2 +1,2 @@
-/** Entity-level public API barrel — заполняется по мере реализации. */
-export {}
+/** Entity-level public API. */
+export * from './auction'
