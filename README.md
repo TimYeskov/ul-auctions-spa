@@ -49,3 +49,15 @@ src/
 ```
 
 Компоненты именуются с суффиксом `*.component.tsx`.
+
+## API
+
+Контракт: `openapi.auctions.v0.json`.
+
+Типы генерируются в `src/shared/api/generated/openapi.ts`:
+
+```bash
+npm run generate:api
+```
+
+Клиент: `auctionsApi` (`list`, `getById`, `listBets`, `setBet`) с разбором ошибок `401` / `404` / `422` / `503`.
