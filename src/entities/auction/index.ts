@@ -1,5 +1,13 @@
 export { AuctionListCard } from './ui/auction-list-card.component'
 export {
+  AuctionDetailCargo,
+  AuctionDetailHeader,
+  AuctionDetailOrganizer,
+  AuctionDetailPayment,
+  AuctionDetailRoutes,
+  AuctionDetailTrading,
+} from './ui/auction-detail-sections.component'
+export {
   AUCTION_STATUS_FILTER_OPTIONS,
   AUCTION_STATUS_LABELS,
   AUCTION_TYPE_FILTER_OPTIONS,
@@ -14,3 +22,9 @@ export {
   type AuctionListCardViewModel,
   type AuctionPrimaryAction,
 } from './model/map-list-item'
+export {
+  mapAuctionDetail,
+  resolveDetailActions,
+  type AuctionDetailAction,
+  type AuctionDetailViewModel,
+} from './model/map-detail'
