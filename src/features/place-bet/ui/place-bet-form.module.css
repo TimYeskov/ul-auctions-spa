@@ -1,0 +1,87 @@
+.form {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.hints {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.hints > div {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.hints span {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field span {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.field input {
+  min-height: 2.5rem;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.field input[aria-invalid='true'] {
+  border-color: #c85a5a;
+}
+
+.error,
+.serverError {
+  margin: 0;
+  color: #8b2e2e;
+  font-size: 0.9rem;
+  font-style: normal;
+}
+
+.note {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.submit {
+  min-height: 2.5rem;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.submit:not(:disabled):hover {
+  background: var(--accent-hover);
+}
+
+@media (max-width: 560px) {
+  .hints {
+    grid-template-columns: 1fr;
+  }
+}
