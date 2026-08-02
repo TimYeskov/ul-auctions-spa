@@ -500,6 +500,17 @@ export function createSeedAuctions(): MockAuctionRecord[] {
         organization_inn: '7700987654',
         contact_name: 'Козлов Игорь',
       }),
+      createBet({
+        id: 40,
+        auction_id: 1001,
+        price_with_vat: 35000,
+        created_at: '2026-05-25T16:02:00',
+        organization_id: 55,
+        organization_name: 'ООО СтартЛогистик',
+        organization_inn: '7700555444',
+        contact_name: 'Орлов Сергей',
+        cancel_reason: 'Отозвана участником',
+      }),
     ],
   })
 

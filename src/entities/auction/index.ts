@@ -28,3 +28,13 @@ export {
   type AuctionDetailAction,
   type AuctionDetailViewModel,
 } from './model/map-detail'
+export {
+  mapBetItem,
+  mapBetList,
+  type BetListItemViewModel,
+  type BetListViewModel,
+} from './model/map-bets'
+export {
+  AuctionBetsList,
+  AuctionBetsSummary,
+} from './ui/auction-bets-list.component'

@@ -4,6 +4,7 @@ import { AuctionBetsPage } from '@/pages/auction-bets/ui/auction-bets-page.compo
 import { AuctionDetailPage } from '@/pages/auction-detail/ui/auction-detail-page.component'
 import { AuctionsListPage } from '@/pages/auctions-list/ui/auctions-list-page.component'
 import { parseAuctionsSearch } from '@/features/auctions-filters'
+import { parseAuctionBetsSearch } from '@/pages/auction-bets/model/search-schema'
 import { rootRoute } from './root-route.component'
 
 export const auctionsListRoute = createRoute({
@@ -22,6 +23,7 @@ export const auctionDetailRoute = createRoute({
 export const auctionBetsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/auctions/$auctionUuid/bets',
+  validateSearch: (search) => parseAuctionBetsSearch(search),
   component: AuctionBetsPage,
 })
 
