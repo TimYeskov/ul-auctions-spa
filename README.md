@@ -61,3 +61,16 @@ npm run generate:api
 ```
 
 Клиент: `auctionsApi` (`list`, `getById`, `listBets`, `setBet`) с разбором ошибок `401` / `404` / `422` / `503`.
+
+## MSW
+
+В dev поднимается in-memory store с 8 аукционами и handlers на 4 эндпоинта.
+
+Покрытые сценарии:
+- активный аукцион с ставками
+- уже есть своя ставка (`Leading`)
+- `can_set_bet=false`
+- `hide_bets_history` / скрытые адреса
+- finished / FixPrice / Up без ставок / Request в Planning
+
+Словарь городов: `src/shared/api/msw/store/cities.ts`.
