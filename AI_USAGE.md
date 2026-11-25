@@ -1,63 +1,63 @@
 # AI Usage
 
-Документ описывает, как AI использовался при выполнении тестового задания UL Auctions SPA.
+This document describes how AI was used while completing the UL Auctions SPA take-home assignment.
 
-## Какие части делались с AI
+## What was done with AI
 
-- Разбор PDF и `openapi.auctions.v0.json`, составление поэтапного плана работ.
-- Scaffold проекта (Vite + React + TS, FSD-скелет, роуты-заглушки, MSW worker).
-- Генерация TypeScript-типов из OpenAPI и каркас API-клиента / `ApiError`.
-- Реализация MSW handlers и мутабельного in-memory store (seed, фильтры, `setBet`).
-- UI страниц: список + фильтры, деталка, ставки, форма ставки.
-- Unit-тесты на чистую логику (search params, мапперы, Zod-схема ставки, store).
-- Инкрементальные git-коммиты и публикация в GitHub.
+- Analysis of the PDF brief and `openapi.auctions.v0.json`, drafting a step-by-step work plan.
+- Project scaffold (Vite + React + TS, FSD skeleton, stub routes, MSW worker).
+- Generating TypeScript types from OpenAPI and the API client / `ApiError` skeleton.
+- MSW handlers and a mutable in-memory store (seed, filters, `setBet`).
+- Page UI: list + filters, details, bids, bid form.
+- Unit tests for pure logic (search params, mappers, Zod bid schema, store).
+- Incremental git commits and publishing to GitHub.
 
-Работа шла в Cursor Agent: AI писал код, запускал `build`/`test`, правил ошибки типов и пушил этапы отдельными коммитами.
+The work was done in Cursor Agent: the AI wrote code, ran `build`/`test`, fixed type errors and pushed each stage as a separate commit.
 
-## Какие решения приняты самостоятельно (кандидатом / в диалоге)
+## Decisions made independently (by the candidate / in discussion)
 
-- **Инкрементальная сдача в GitHub**, а не один финальный коммит.
-- **Zustand только для toast**, серверные данные — строго в TanStack Query.
-- **URL search params** для фильтров списка (не localStorage).
-- **Типы из OpenAPI** через `openapi-typescript`, поверх — тонкие aliases и клиент.
-- **Единый MSW store** как source of truth для list/detail/bets после мутаций.
-- **Свои CSS modules** без UI-kit, чтобы быстрее закрыть сценарии ТЗ.
-- Именование компонентов строго `*.component.tsx` по требованию задания.
+- **Incremental delivery to GitHub** instead of a single final commit.
+- **Zustand only for toasts**; server data lives strictly in TanStack Query.
+- **URL search params** for list filters (not localStorage).
+- **Types generated from OpenAPI** via `openapi-typescript`, with thin aliases and a client on top.
+- **A single MSW store** as the source of truth for list/detail/bets after mutations.
+- **Custom CSS modules** without a UI kit, to cover the brief's scenarios faster.
+- Components strictly named `*.component.tsx`, as required by the assignment.
 
-## Какие AI-предложения были отклонены / скорректированы
+## AI suggestions rejected or corrected
 
-- Не раздувать scope за рамки OpenAPI и PDF (без лишних сущностей и «улучшений продукта»).
-- Не тащить тяжёлую UI-библиотеку «по умолчанию».
-- Не класть серверный стейт в MobX/Zustand.
-- Исправление хрупких мест после AI-черновиков:
-  - типы `null` vs `undefined` в seed под generated OpenAPI types;
-  - корректный merge overrides в тестовых фикстурах;
-  - совместимость Zod 4 + `zodResolver` (явный `Resolver<BetFormValues>`);
-  - search params у `Link to="/"` после появления `validateSearch`.
+- Do not grow the scope beyond the OpenAPI schema and the PDF (no extra entities or "product improvements").
+- Do not pull in a heavy UI library "by default".
+- Do not keep server state in MobX/Zustand.
+- Fixing fragile spots in AI drafts:
+  - `null` vs `undefined` types in the seed to match the generated OpenAPI types;
+  - correct merging of overrides in test fixtures;
+  - Zod 4 + `zodResolver` compatibility (explicit `Resolver<BetFormValues>`);
+  - search params on `Link to="/"` after `validateSearch` was introduced.
 
-## Что проверялось особенно внимательно
+## What was checked especially carefully
 
-- Соответствие request/response контрактам OpenAPI (enum’ы, nullable, `ProblemDetail` / `422`).
-- Мутация ставки: обновление `current` / `available` / `your` / `status_mobile` / bets.
-- Флаги `can_set_bet`, `hide_bets_history`, `hide_points_address_and_contacts`, `no_view_cargo_price`.
-- Zod-валидация search params со safe fallback.
-- Инвалидация Query-ключей после `setBet`.
-- `npm run test` и `npm run build` на каждом крупном этапе.
+- Conformance to the OpenAPI request/response contracts (enums, nullable fields, `ProblemDetail` / `422`).
+- The bid mutation: updating `current` / `available` / `your` / `status_mobile` / bets.
+- Flags `can_set_bet`, `hide_bets_history`, `hide_points_address_and_contacts`, `no_view_cargo_price`.
+- Zod validation of search params with a safe fallback.
+- Query key invalidation after `setBet`.
+- `npm run test` and `npm run build` at every major stage.
 
-## Какие риски остались
+## Remaining risks
 
-- MSW-фильтрация покрывает нужные фильтры ТЗ, но не гарантирует 1:1 поведение реального backend по всем полям `AuctionListRequest`.
-- Нет e2e-регрессии на пользовательские сценарии в CI.
-- Визуальный дизайн минимальный: удобен для проверки логики, но не «продуктовый» UI-kit.
-- Production-сборка не поднимает MSW — без отдельного mock-режима/прокси API приложение не получит данные.
-- Точность step-валидации на float может давать краевые кейсы (как и в реальных деньгах без decimal-библиотеки).
+- MSW filtering covers the filters required by the brief but does not guarantee 1:1 behaviour with a real backend for every `AuctionListRequest` field.
+- No e2e regression of user scenarios in CI.
+- Minimal visual design: convenient for verifying logic, but not a production-grade UI kit.
+- The production build does not start MSW — without a separate mock mode/API proxy the app gets no data.
+- Float-based step validation may produce edge cases (as with real money without a decimal library).
 
-## Что улучшить при наличии ещё одного дня
+## What I would improve with one more day
 
-1. Playwright-сценарии: список → фильтр → деталка → ставка → история.
-2. Вынести session/current user из MSW constants в `shared/config`.
-3. Более строгий decimal/money helper для step/min/max.
-4. Добить UI-фильтры до полного `AuctionListRequest` или явно задокументировать subset.
-5. Storybook/витрина seed-сценариев для ревьюера.
-6. CI (GitHub Actions): `lint` + `test` + `build` на PR.
-7. Аккуратнее разложить крупные секции деталки в `widgets/` по FSD.
+1. Playwright scenarios: list → filter → details → bid → history.
+2. Move the session/current user from MSW constants to `shared/config`.
+3. A stricter decimal/money helper for step/min/max.
+4. Extend UI filters to the full `AuctionListRequest` or explicitly document the subset.
+5. Storybook / a showcase of seed scenarios for the reviewer.
+6. CI (GitHub Actions): `lint` + `test` + `build` on PRs.
+7. Split large detail-page sections into `widgets/` per FSD.

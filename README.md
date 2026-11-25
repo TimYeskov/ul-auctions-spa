@@ -1,130 +1,130 @@
 # UL Auctions SPA
 
-Тестовое задание: SPA для работы с грузовыми аукционами по OpenAPI-схеме `openapi.auctions.v0.json`.
+Take-home assignment: an SPA for freight auctions built against the OpenAPI schema `openapi.auctions.v0.json`.
 
-Репозиторий: https://github.com/TimYeskov/ul-auctions-spa
+Repository: https://github.com/TimYeskov/ul-auctions-spa
 
-## Стек
+## Stack
 
 - React + TypeScript + Vite
 - TanStack Router / TanStack Query
 - React Hook Form + Zod
-- MSW (мутабельный in-memory store)
+- MSW (mutable in-memory store)
 - Feature-Sliced Design
-- Zustand (toast UI-state)
+- Zustand (toast UI state)
 - Vitest
 
-## Запуск
+## Getting started
 
 ```bash
 npm install
 npm run dev
 ```
 
-Откройте http://localhost:5173/
+Open http://localhost:5173/
 
-В dev-режиме автоматически стартует MSW (`public/mockServiceWorker.js`). Backend не нужен.
+In dev mode MSW starts automatically (`public/mockServiceWorker.js`). No backend required.
 
-## Скрипты
+## Scripts
 
-| Команда | Описание |
-|---------|----------|
-| `npm run dev` | локальная разработка + MSW |
-| `npm run build` | production-сборка (`tsc -b && vite build`) |
-| `npm run preview` | просмотр production-сборки |
-| `npm run test` | unit-тесты (Vitest) |
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | local development + MSW |
+| `npm run build` | production build (`tsc -b && vite build`) |
+| `npm run preview` | preview the production build |
+| `npm run test` | unit tests (Vitest) |
 | `npm run test:e2e` | smoke e2e (Playwright) |
 | `npm run lint` | oxlint |
-| `npm run generate:api` | перегенерация типов из OpenAPI |
+| `npm run generate:api` | regenerate types from OpenAPI |
 
-## Маршруты
+## Routes
 
-| Путь | Назначение |
-|------|------------|
-| `/` | список аукционов, фильтры в URL search params |
-| `/auctions/$auctionUuid` | деталка |
-| `/auctions/$auctionUuid/bets` | история ставок (`?all=true` — включая отменённые) |
-| `/auctions/$auctionUuid/bet` | форма ставки (открывается по прямой ссылке) |
+| Path | Purpose |
+|------|---------|
+| `/` | auction list, filters stored in URL search params |
+| `/auctions/$auctionUuid` | auction details |
+| `/auctions/$auctionUuid/bets` | bid history (`?all=true` includes cancelled bids) |
+| `/auctions/$auctionUuid/bet` | bid form (opens via direct link) |
 
-## Структура (FSD)
+## Structure (FSD)
 
 ```
 src/
-  app/        # провайдеры, роутер, глобальные стили
-  pages/      # страницы маршрутов
-  widgets/    # составные блоки (зарезервировано)
-  features/   # фильтры, пагинация, форма ставки
-  entities/   # auction: карточки, мапперы, секции
-  shared/     # api-клиент, MSW, toast, config
+  app/        # providers, router, global styles
+  pages/      # route pages
+  widgets/    # composite blocks (reserved)
+  features/   # filters, pagination, bid form
+  entities/   # auction: cards, mappers, sections
+  shared/     # API client, MSW, toast, config
 ```
 
-React-компоненты именуются с суффиксом `*.component.tsx`.
+React components use the `*.component.tsx` suffix.
 
-## API и моки
+## API and mocks
 
-Контракт: [`openapi.auctions.v0.json`](./openapi.auctions.v0.json).
+Contract: [`openapi.auctions.v0.json`](./openapi.auctions.v0.json).
 
-Типы: `src/shared/api/generated/openapi.ts`  
-Клиент: `auctionsApi` — `list` / `getById` / `listBets` / `setBet`  
-Ошибки: `ApiError` для `401` / `404` / `422` / `503` (+ `ProblemDetail` / `ValidationProblem`).
+Types: `src/shared/api/generated/openapi.ts`  
+Client: `auctionsApi` — `list` / `getById` / `listBets` / `setBet`  
+Errors: `ApiError` for `401` / `404` / `422` / `503` (+ `ProblemDetail` / `ValidationProblem`).
 
-MSW store содержит 8 аукционов:
+The MSW store contains 8 auctions:
 
-| UUID (кратко) | Сценарий |
-|---------------|----------|
-| `3a05d045-…` | Down, можно ставить, есть конкуренты + отменённая ставка |
-| `7c9e6679-…` | уже есть своя ставка (`Leading`) |
+| UUID (short) | Scenario |
+|--------------|----------|
+| `3a05d045-…` | Down auction, bidding open, competitors + a cancelled bid |
+| `7c9e6679-…` | own bid already placed (`Leading`) |
 | `33333333-…` | `can_set_bet=false` |
-| `22222222-…` | `hide_bets_history` + скрытые адреса/контакты |
-| `44444444-…` | Finished, победитель |
+| `22222222-…` | `hide_bets_history` + hidden addresses/contacts |
+| `44444444-…` | Finished, with a winner |
 | `55555555-…` | FixPrice |
-| `66666666-…` | Up, ставок ещё нет |
+| `66666666-…` | Up auction, no bids yet |
 | `11111111-…` | Request / Planning |
 
-Словарь городов: `src/shared/api/msw/store/cities.ts`.
+City dictionary: `src/shared/api/msw/store/cities.ts`.
 
-После `POST .../bets` store обновляет текущую цену, `available`, `your.*`, `status_mobile` и список ставок.
+After `POST .../bets` the store updates the current price, `available`, `your.*`, `status_mobile` and the bid list.
 
-## Что проверялось
+## Testing
 
-### Автоматически
+### Automated
 
 ```bash
-npm run test      # 27+ unit
-npm run test:e2e  # smoke: список, фильтр, ставка, hide_bets_history
+npm run test      # 27+ unit tests
+npm run test:e2e  # smoke: list, filter, bid, hide_bets_history
 npm run build
 ```
 
-Покрыта чистая логика:
+Pure logic covered by tests:
 
-- разбор `ProblemDetail` / `ValidationProblem`
-- filter/pagination MSW store + `setBet`
-- parsing search params списка
-- ViewModel-мапперы list / detail / bets
-- Zod-схема ставки (min/max/step/available/FixPrice)
+- parsing `ProblemDetail` / `ValidationProblem`
+- MSW store filtering/pagination + `setBet`
+- parsing list search params
+- ViewModel mappers for list / detail / bets
+- Zod bid schema (min/max/step/available/FixPrice)
 
-### Вручную в браузере
+### Manual, in the browser
 
-1. Список грузится, видны skeleton → карточки, пагинация работает.
-2. Фильтры пишутся в URL (`cargo_num`, города, даты, цена, тип, статусы, `is_available`, `is_bidder`) и переживают refresh.
-3. Hover по карточке префетчит деталку (Network / React Query Devtools не обязательны — повторный переход быстрее).
-4. Деталка показывает торги, организатора, маршрут, груз, оплату.
-5. Аукцион со скрытыми адресами (`22222222-…`) не показывает контакты/адреса точек.
-6. Страница ставок: участники, НДС/без НДС, место, win/own/cancel; `?all=true` показывает отменённые.
-7. При `hide_bets_history` — отдельное сообщение, не пустой список «как будто ставок нет».
-8. Форма ставки: валидация на клиенте, успех → toast + редирект на деталку, цена/статус обновляются.
-9. Аукцион с `can_set_bet=false` блокирует форму.
-10. Адаптив: узкая ширина (~375px) — фильтры/карточки/кнопки не ломают layout.
+1. The list loads with skeleton → cards; pagination works.
+2. Filters are written to the URL (`cargo_num`, cities, dates, price, type, statuses, `is_available`, `is_bidder`) and survive a refresh.
+3. Hovering a card prefetches its details (the second navigation is noticeably faster).
+4. The details page shows bidding info, organizer, route, cargo and payment.
+5. An auction with hidden addresses (`22222222-…`) does not reveal contacts/route addresses.
+6. Bids page: participants, VAT / no VAT, rank, win/own/cancel; `?all=true` shows cancelled bids.
+7. With `hide_bets_history` a dedicated message is shown instead of an empty "no bids" list.
+8. Bid form: client-side validation; success → toast + redirect to details, price/status update.
+9. An auction with `can_set_bet=false` disables the form.
+10. Responsive: at narrow width (~375px) filters, cards and buttons keep the layout intact.
 
-## Ограничения
+## Limitations
 
-- Нет реального backend/auth: MSW только в `import.meta.env.DEV`.
-- Нет полного e2e-набора — есть smoke Playwright (`npm run test:e2e`), но не CI-матрица браузеров.
-- UI без сторонней component library: собственный лёгкий CSS.
-- Не все поля `AuctionListRequest` вынесены в UI-фильтры (в store фильтрация шире, чем форма).
-- Toast-очередь на Zustand без persistence.
-- `widgets/` слой почти пустой: крупные блоки пока живут в `entities` / `pages`.
+- No real backend/auth: MSW runs only in `import.meta.env.DEV`.
+- No full e2e suite — only a Playwright smoke test (`npm run test:e2e`), no CI browser matrix.
+- No third-party component library: lightweight custom CSS.
+- Not all `AuctionListRequest` fields are exposed as UI filters (the store filters more than the form).
+- Zustand toast queue without persistence.
+- The `widgets/` layer is almost empty: large blocks currently live in `entities` / `pages`.
 
-## Документация по AI
+## AI usage
 
-См. [`AI_USAGE.md`](./AI_USAGE.md).
+See [`AI_USAGE.md`](./AI_USAGE.md).
